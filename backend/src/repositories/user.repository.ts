@@ -8,6 +8,10 @@ export class UserRepository {
     return this.repository.findOneBy({ email });
   }
 
+  findById(id: number): Promise<User | null> {
+    return this.repository.findOneBy({ id });
+  }
+
   create(email: string, passwordHash: string): Promise<User> {
     const user = this.repository.create({ email, passwordHash });
     return this.repository.save(user);

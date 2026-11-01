@@ -114,3 +114,12 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     .status(204)
     .send();
 };
+
+export const me = (req: Request, res: Response): void => {
+  if (!req.user) {
+    res.status(401).json({ message: "Authentication required" });
+    return;
+  }
+
+  res.json({ user: req.user });
+};
