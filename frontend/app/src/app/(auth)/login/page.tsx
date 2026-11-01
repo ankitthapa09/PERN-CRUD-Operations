@@ -1,8 +1,5 @@
+import { AuthForm } from "@/features/auth";
+
 export default function LoginPage() {
-  return (
-    <main>
-      <h1>Login</h1>
-      <p>Authentication will be added here.</p>
-    </main>
-  );
+  return <AuthForm mode="login" />;
 }

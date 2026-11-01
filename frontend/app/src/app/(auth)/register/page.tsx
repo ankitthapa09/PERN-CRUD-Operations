@@ -1,8 +1,5 @@
+import { AuthForm } from "@/features/auth";
+
 export default function RegisterPage() {
-  return (
-    <main>
-      <h1>Register</h1>
-      <p>Account registration will be added here.</p>
-    </main>
-  );
+  return <AuthForm mode="register" />;
 }

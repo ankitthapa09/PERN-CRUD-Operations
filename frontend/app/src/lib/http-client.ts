@@ -10,7 +10,10 @@ export async function request<T>(
   input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<T> {
-  const response = await fetch(input, init);
+  const response = await fetch(input, {
+    ...init,
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error(await getErrorMessage(response));

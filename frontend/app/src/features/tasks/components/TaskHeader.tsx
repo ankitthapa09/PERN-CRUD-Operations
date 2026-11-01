@@ -1,10 +1,13 @@
+ "use client";
+
 import type { Task } from "@/features/tasks/types";
 
 type TaskHeaderProps = {
   tasks: Task[];
+  onLogout: () => Promise<void>;
 };
 
-export function TaskHeader({ tasks }: TaskHeaderProps) {
+export function TaskHeader({ tasks, onLogout }: TaskHeaderProps) {
   const completedCount = tasks.filter((task) => task.completed).length;
 
   return (
@@ -14,9 +17,14 @@ export function TaskHeader({ tasks }: TaskHeaderProps) {
         <h1>My tasks</h1>
         <p className="subtitle">Keep your work clear and moving forward.</p>
       </div>
-      <div className="progress-badge">
-        <strong>{completedCount}</strong>
-        <span>of {tasks.length} done</span>
+      <div className="header-actions">
+        <div className="progress-badge">
+          <strong>{completedCount}</strong>
+          <span>of {tasks.length} done</span>
+        </div>
+        <button className="logout-button" onClick={() => void onLogout()}>
+          Log out
+        </button>
       </div>
     </header>
   );
