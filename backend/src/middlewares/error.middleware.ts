@@ -1,6 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { TaskNotFoundError } from "../services/task.service";
-import { EmailAlreadyRegisteredError } from "../services/auth.service";
+import {
+  EmailAlreadyRegisteredError,
+  InvalidRefreshTokenError,
+} from "../services/auth.service";
 
 export const errorHandler = (
   error: unknown,
@@ -15,6 +18,11 @@ export const errorHandler = (
 
   if (error instanceof EmailAlreadyRegisteredError) {
     res.status(409).json({ message: error.message });
+    return;
+  }
+
+  if (error instanceof InvalidRefreshTokenError) {
+    res.status(401).json({ message: error.message });
     return;
   }
 
