@@ -9,6 +9,10 @@ export const authApi = {
     return request<AuthResponse>(`${AUTH_API_URL}/me`);
   },
 
+  refresh(): Promise<void> {
+    return request<void>(`${AUTH_API_URL}/refresh`, { method: "POST" });
+  },
+
   register(email: string, password: string): Promise<AuthResponse> {
     return request<AuthResponse>(`${AUTH_API_URL}/register`, {
       method: "POST",

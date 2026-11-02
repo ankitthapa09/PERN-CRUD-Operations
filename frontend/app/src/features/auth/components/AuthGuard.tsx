@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { authApi } from "@/features/auth/api";
 
 type AuthGuardProps = {
@@ -9,22 +8,35 @@ type AuthGuardProps = {
 };
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const router = useRouter();
   const [checking, setChecking] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     let active = true;
 
     const checkAuthentication = async () => {
+      const redirectToLogin = () => {
+        if (active) {
+          setRedirecting(true);
+          window.location.replace("/login");
+        }
+      };
+
       try {
         await authApi.me();
         if (active) {
           setAuthenticated(true);
         }
       } catch {
-        if (active) {
-          router.replace("/login");
+        try {
+          await authApi.refresh();
+          await authApi.me();
+          if (active) {
+            setAuthenticated(true);
+          }
+        } catch {
+          redirectToLogin();
         }
       } finally {
         if (active) {
@@ -38,9 +50,9 @@ export function AuthGuard({ children }: AuthGuardProps) {
     return () => {
       active = false;
     };
-  }, [router]);
+  }, []);
 
-  if (checking || !authenticated) {
+  if (checking || redirecting || !authenticated) {
     return (
       <main className="auth-loading" aria-live="polite">
         Checking your session...

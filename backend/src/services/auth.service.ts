@@ -87,7 +87,7 @@ export class AuthService {
     }
 
     if (
-      typeof payload.sub !== "string" ||
+      (typeof payload.sub !== "string" && typeof payload.sub !== "number") ||
       typeof payload.jti !== "string" ||
       payload.type !== "refresh"
     ) {

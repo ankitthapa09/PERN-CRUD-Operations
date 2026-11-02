@@ -23,14 +23,13 @@ export const requireAuth = async (
 
     if (
       typeof verified === "string" ||
-      typeof (verified as JwtPayload).sub !== "string" ||
-      (verified as JwtPayload).type !== "access"
+      !isValidTokenType(verified, "access")
     ) {
       res.status(401).json({ message: "Invalid access token" });
       return;
     }
 
-    const userId = Number((verified as JwtPayload).sub);
+    const userId = Number(verified.sub);
     if (!Number.isInteger(userId) || userId < 1) {
       res.status(401).json({ message: "Invalid access token" });
       return;
@@ -52,3 +51,13 @@ export const requireAuth = async (
     res.status(401).json({ message: "Invalid or expired access token" });
   }
 };
+
+function isValidTokenType(
+  payload: JwtPayload,
+  expectedType: "access",
+): payload is JwtPayload & { sub: string | number; type: "access" } {
+  return (
+    (typeof payload.sub === "string" || typeof payload.sub === "number") &&
+    payload.type === expectedType
+  );
+}
